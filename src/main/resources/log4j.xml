@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+ 	<appender name="fileError" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/error.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="30MB" />
+		<param name="MaxBackupIndex" value="20" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%p]-[%c] %m%n" />
+		</layout>
+		<Filters>
+	        <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>  
+        </Filters>
+	</appender> 
+	
+	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/info.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%-d{yyyy-MM-dd HH:mm:ss} %-5p %-5c{3}:%L %x -> %m%n" />
+		</layout>
+		
+		<Filters>
+            <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>  
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Filters>
+	</appender>  	
+
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+		<param name="BufferSize" value="1000" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%-d{yyyy-MM-dd HH:mm:ss} %-5p %-5c{3}:%L %x -> %m%n" />
+		</layout>
+		<appender-ref ref="rollingFileAppender" />
+	</appender>
+
+
+	<!-- 以上信息尽量不动  -->
+	<root>
+		<priority value="info" /><!-- 上生成环境需要修改为info级别，开发环境可用debug模式  -->
+		<appender-ref ref="stdout" />
+		<appender-ref ref="file" />
+		<appender-ref ref="fileError" />
+	</root>
+	
+</log4j:configuration>
